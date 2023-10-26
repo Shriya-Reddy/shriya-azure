@@ -1,8 +1,0 @@
-{
-	"name": "pipeline1",
-	"properties": {
-		"annotations": [],
-		"lastPublishTime": "2023-10-26T15:11:54Z"
-	},
-	"type": "Microsoft.DataFactory/factories/pipelines"
-}
