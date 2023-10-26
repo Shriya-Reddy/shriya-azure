@@ -1,0 +1,69 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText3",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText5",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "assert1"
+				},
+				{
+					"name": "split1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Labels as string,",
+				"          {Option 1} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 assert(expectTrue({Option 1} != 'Tray Time', false, 'traytimeid')) ~> assert1",
+				"assert1 split(hasError('traytimeid'),",
+				"     disjoint: false) ~> split1@(hasError, donothaverror)",
+				"split1@hasError sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          Labels as string,",
+				"          {Option 1} as string",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1",
+				"split1@donothaverror sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          Labels as string,",
+				"          {Option 1} as string",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink2"
+			]
+		}
+	}
+}
